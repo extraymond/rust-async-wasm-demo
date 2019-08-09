@@ -18,18 +18,7 @@
 
 ### 1. project setup
 
-
-```mermaid
-graph BT
-  B[frontend] -->|parcel| A[bundled webapp]
-  C[wasm file] --> B
-  D[rust code] --> C
-  E["yew"] -->|elm style frontend| D
-  F["futures 0.3"] -->|async/await| D
-  G["web-sys"] -->|fetch api| D
-  I["wasm-bindgen-futures"] -->|promise <-> future| D
-  H[bulma] -->|pure css styling framework| B
-```
+![Screenshot_20190809_144943](/assets/Screenshot_20190809_144943.png)
 
 
 **components diagram**
@@ -394,10 +383,7 @@ This is rather simple thanks to wasm-bindgen and the rustwasm team for providing
 
 For rustaceans that are not familiar with webdev and frontend bundlers, the minimal process to build rust to wasm is like this:
 
-```mermaid
-graph LR
-rust -->|cargo build --target wasm32-unknown-unknown| wasm
-```
+![Screenshot_20190809_144959](/assets/Screenshot_20190809_144959.png)
 
 This will make your rust program a wasm binary. However, for calling rust functions in js more friendly, wasm-bindgen will help us tag our rust functions in the wasm module along with stuffs like type conversion in the generated wasm between rust/wasm.
 
@@ -420,13 +406,7 @@ While we're talking about fronend development, prototyping quickly is rather imp
 
 So the build process now looks like this:
 
-```mermaid
-graph LR
-D[rust] -->|managed by bundler| C
-C[wasm] -->|managed by bundler| A[js_script]
-F[additional js/css/html] -->|still the bundler| E[output bundle]
-A --> E
-```
+![Screenshot_20190809_145011](/assets/Screenshot_20190809_145011.png)
 
 Eventually, rust code is still governed by Cargo.toml, and will build with the right rlease falg when your bundler says so, but not in dev-mode (often enable hot-reload).
 
@@ -551,5 +531,3 @@ Therefore, I've tried to build the dist bundle first, move it to another folder,
 # Demo
 
 ![Peek 2019-08-06 04-14](/assets/Peek%202019-08-06%2004-14.gif)
-
-[Imgur link](https://imgur.com/Dfzmg0Q)
