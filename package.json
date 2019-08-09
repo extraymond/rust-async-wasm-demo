@@ -6,13 +6,20 @@
   "license": "Apache-2.0/MIT",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "run_webext": "npm run build && cp manifest.json dist/ && web-ext run -s dist",
+    "build_webext": "npm run build && cp manifest.json dist/ && web-ext build -s dist --overwrite-dest"
   },
   "bin": {
     "create-rust-parcel": ".bin/create-rust-parcel.js"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.3",
-    "parcel-plugin-wasm.rs": "^1.2.11"
+    "parcel-plugin-wasm.rs": "^1.2.11",
+    "sass": "^1.22.9"
+  },
+  "dependencies": {
+    "bulma": "^0.7.5",
+    "websocket-as-promised": "^0.10.1"
   }
 }

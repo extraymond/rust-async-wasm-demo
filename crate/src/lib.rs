@@ -1,51 +1,37 @@
-#[macro_use]
-extern crate cfg_if;
+#![feature(async_await)]
+#![recursion_limit = "512"]
 
-extern crate wasm_bindgen;
-extern crate web_sys;
+use console_error_panic_hook;
+use futures::{
+    channel::mpsc::{self, Receiver, Sender},
+    executor,
+    future::{FutureObj, LocalFutureObj},
+    io,
+    lock::Mutex,
+    sink::SinkExt,
+    stream::StreamExt,
+    task::{LocalSpawn, LocalSpawnExt},
+};
+use log::{info, Level};
+use std::rc::Rc;
+use std::time::Duration;
 use wasm_bindgen::prelude::*;
+use wasm_bindgen_futures::futures_0_3::spawn_local;
+use wasm_timer::Delay;
+use web_logger;
+use yew::{self, html::Scope, App};
+mod app;
+mod connector;
 
-cfg_if! {
-    // When the `console_error_panic_hook` feature is enabled, we can call the
-    // `set_panic_hook` function to get better error messages if we ever panic.
-    if #[cfg(feature = "console_error_panic_hook")] {
-        extern crate console_error_panic_hook;
-        use console_error_panic_hook::set_once as set_panic_hook;
-    } else {
-        #[inline]
-        fn set_panic_hook() {}
-    }
-}
-
-cfg_if! {
-    // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-    // allocator.
-    if #[cfg(feature = "wee_alloc")] {
-        extern crate wee_alloc;
-        #[global_allocator]
-        static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-    }
-}
-
-// Called by our JS entry point to run the example
 #[wasm_bindgen]
-pub fn run() -> Result<(), JsValue> {
-    // If the `console_error_panic_hook` feature is enabled this will set a panic hook, otherwise
-    // it will do nothing.
-    set_panic_hook();
+pub fn run() {
+    console_error_panic_hook::set_once();
+    web_logger::init();
 
-    // Use `web_sys`'s global `window` function to get a handle on the global
-    // window object.
-    let window = web_sys::window().expect("no global `window` exists");
-    let document = window.document().expect("should have a document on window");
-    let body = document.body().expect("document should have a body");
-
-    // Manufacture the element we're gonna append
-    let val = document.create_element("p")?;
-    val.set_inner_html("Hello from Rust, WebAssembly, and Parcel!");
-
-    body.append_child(&val)?;
-
-    Ok(())
+    let mut scope = make_scope();
 }
 
+fn make_scope() -> yew::html::Scope<app::Model> {
+    let app: App<app::Model> = App::new();
+    app.mount_to_body()
+}
