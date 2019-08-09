@@ -530,4 +530,6 @@ Therefore, I've tried to build the dist bundle first, move it to another folder,
 
 # Demo
 
+This demo will let you spawn quotes fetched from public api, and auto refresh then every few seconds by an async function.
+
 ![Peek 2019-08-06 04-14](/assets/Peek%202019-08-06%2004-14.gif)
