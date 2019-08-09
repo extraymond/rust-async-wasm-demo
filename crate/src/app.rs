@@ -1,25 +1,11 @@
-#![feature(async_await)]
-
 use super::connector;
 
-use futures::{
-    channel::mpsc::{self, Receiver, Sender},
-    executor, io,
-    lock::Mutex,
-    sink::SinkExt,
-    stream::StreamExt,
-};
-
-use log::info;
-use std::{cell::RefCell, rc::Rc, time::Duration};
-use uuid::Uuid;
-use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::futures_0_3::{future_to_promise, spawn_local, JsFuture};
+use std::time::Duration;
+use wasm_bindgen_futures::futures_0_3::spawn_local;
 use wasm_timer::Delay;
-use yew::{html, html::Scope, Component, ComponentLink, Html, Renderable, ShouldRender};
+use yew::{html, Component, ComponentLink, Html, Renderable, ShouldRender};
 
 pub struct Model {
-    link: ComponentLink<Self>,
     tasks: Vec<Task>,
 }
 
@@ -70,7 +56,7 @@ impl Component for Task {
         }
     }
 
-    fn change(&mut self, prop: Self::Properties) -> ShouldRender {
+    fn change(&mut self, _: Self::Properties) -> ShouldRender {
         true
     }
 }
@@ -100,11 +86,8 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
 
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Model {
-            link,
-            tasks: Vec::new(),
-        }
+    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+        Model { tasks: Vec::new() }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
